@@ -1,52 +1,43 @@
-### CD Size Checker Development Tasks
+# CD Size Checker
 
-- [x] **Implement File Size Calculation**
-  - Created `get_directory_size()` to calculate file sizes (for directories).
-  - **Remaining**: Extend to handle individual files (check `os.path.isfile()`).
+## Installation
 
-- [x] **Implement Directory Size Calculation**
-  - Implemented recursive directory size calculation using `os.walk()` in `get_directory_size()`.
+Clone the repository:
+```bash
+git clone https://github.com/Lucaas-o/CD-Size-Checker.git
+```
 
-- [ ] **Support Multiple CD Sizes**
-  - Added `--cd-size` flag with default 700MB.
-  - **Remaining**: Add predefined options (e.g., 650MB, 700MB, 800MB) using `argparse` choices or validation.
+Navigate to the project directory:
+```bash
+cd cd_size_checker
+```
 
-- [x] **Create Command-Line Interface (CLI)**
-  - Implemented CLI using `argparse` with `directory` and `--cd-size` arguments.
-  - **Remaining**: Consider switching to `click` for enhanced CLI features (requires updating `requirements.txt`).
+Install dependencies (if any):
+```bash
+pip install -r requirements.txt
+```
 
-- [ ] **Add Error Handling**
-  - Basic handling for invalid directories and inaccessible files.
-  - **Remaining**: Handle symbolic links, permission errors, and validate `--cd-size` (e.g., must be positive).
+## Usage
 
-- [ ] **Write Unit Tests**
-  - Test `get_directory_size()` and `check_cd_fit()` for various cases (e.g., empty directories, single files, errors).
-  - Use `unittest` or `pytest` with temporary files/directories.
+Run the script from the command line to check if files fit on a CD. Example:
+```bash
+python cd_size_checker.py /path/to/files --cd-size 700
+```
 
-- [ ] **Add Documentation**
-  - Add detailed docstrings for all functions in `main.py`.
-  - Update README.md with detailed usage examples and screenshots.
+- `--cd-size`: Specify the CD capacity in MB (default: 700).
 
-- [ ] **Optimize Performance**
-  - Optimize directory scanning for large file sets (e.g., use `tqdm` for progress bar or `multiprocessing`).
-  - Consider caching file sizes for repeated checks.
+The script will output whether the files fit and display the total size.
 
-- [ ] **Add Support for File Type Filtering**
-  - Allow users to include/exclude specific file types (e.g., `--extensions mp3,wav`).
-  - Use `os.path.splitext()` or `fnmatch` for filtering.
+## Dependencies
 
-- [ ] **Create Sample Usage Guide**
-  - Provide a step-by-step guide in README.md.
-  - Include examples for common use cases (e.g., checking music files for an audio CD).
+- Python 3.6+
+- Standard libraries: `os`, `sys`
+- Optional: `click` for enhanced CLI functionality (install via `pip install click`)
 
-- [ ] **Enhance Output Details**
-  - Show additional stats (e.g., number of files, largest file, remaining CD space).
-  - Calculate and display in `check_cd_fit()`.
+## License
 
-- [ ] **Add Verbose Mode**
-  - Add `--verbose` flag to show file-by-file sizes during scanning.
-  - Implement in `get_directory_size()` with conditional printing.
+This project is licensed under the MIT License. See the LICENSE file for details.
 
-- [ ] **Support Multiple Directories/Files**
-  - Allow checking multiple paths (e.g., `python main.py dir1 dir2 file1.txt`).
-  - Update `argparse` to accept multiple arguments (`nargs='+'`).
+## Author
+
+[Lucaas-o]
