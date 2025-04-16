@@ -7,7 +7,7 @@
 - [x] **Implement Directory Size Calculation**
   - Implemented recursive directory size calculation using `os.walk()` in `get_directory_size()`.
 
-- [ ] **Support Multiple CD Sizes**
+- [x] **Support Multiple CD Sizes**
   - Added `--cd-size` flag with default 700MB.
   - **Remaining**: Add predefined options (e.g., 650MB, 700MB, 800MB) using `argparse` choices or validation.
 
