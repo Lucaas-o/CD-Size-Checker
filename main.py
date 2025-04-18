@@ -301,66 +301,69 @@ def main():
 
     if not paths and args.cd_size is None and args.preset_size is None:
         interactive_mode(args.quiet)
-        return
-
-    if not paths:
-        if not args.quiet:
-            console.print("[red]Error: Missing directory or file paths.[/red]")
-        paths = []
-        current_dir = os.getcwd()
-        while True:
-            path = input(f"Please enter a path (e.g., {current_dir}\\Music, or Enter for current dir): ").strip() if not args.quiet else current_dir
-            if not path:
-                paths.append(current_dir)
-                if not args.quiet:
-                    console.print(f"Added: {current_dir}")
-                break
-            path = clean_path(path)
-            if not os.path.exists(path):
-                if not args.quiet:
-                    console.print(f"[red]Error: {path} does not exist. Try again.[/red]")
-                continue
-            paths.append(path)
+    else:
+        if not paths:
             if not args.quiet:
-                console.print(f"Added: {path}")
-            break
-
-    if args.extensions:
-        allowed_extensions = [ext.strip().lstrip('.').lower() for ext in args.extensions.split(',')]
-    else:
-        allowed_extensions = None
-
-    if args.cd_size is not None:
-        cd_size = args.cd_size
-    elif args.preset_size is not None:
-        cd_size = CD_PRESETS[args.preset_size]
-    else:
-        if not args.quiet:
-            console.print("[red]Error: Missing disc size.[/red]")
-        preset_choice = input("Choose a preset size (or press Enter for custom size): \n" +
-                             "\n".join(f"  {k}: {v} MB" for k, v in CD_PRESETS.items()) + "\n> ").strip() if not args.quiet else "CD_700MB"
-        if preset_choice in CD_PRESETS:
-            cd_size = CD_PRESETS[preset_choice]
-        else:
+                console.print("[red]Error: Missing directory or file paths.[/red]")
+            paths = []
+            current_dir = os.getcwd()
             while True:
-                custom_size = input("Enter custom disc size in MB (e.g., 730.5): ").strip() if not args.quiet else "700"
-                try:
-                    cd_size = float(custom_size)
-                    if cd_size <= 0:
-                        if not args.quiet:
-                            console.print("[red]Error: Size must be positive.[/red]")
-                        continue
-                    break
-                except ValueError:
+                path = input(f"Please enter a path (e.g., {current_dir}\\Music, or Enter for current dir): ").strip() if not args.quiet else current_dir
+                if not path:
+                    paths.append(current_dir)
                     if not args.quiet:
-                        console.print("[red]Error: Invalid number. Try again.[/red]")
+                        console.print(f"Added: {current_dir}")
+                    break
+                path = clean_path(path)
+                if not os.path.exists(path):
+                    if not args.quiet:
+                        console.print(f"[red]Error: {path} does not exist. Try again.[/red]")
+                    continue
+                paths.append(path)
+                if not args.quiet:
+                    console.print(f"Added: {path}")
+                break
 
-    for path in paths:
-        if not args.quiet:
-            console.print(f"Checking {path}:")
-        check_cd_fit(path, cd_size, allowed_extensions, args.verbose, args.quiet, args.show_errors, args.show_skipped)
-        if not args.quiet:
-            console.print()
+        if args.extensions:
+            allowed_extensions = [ext.strip().lstrip('.').lower() for ext in args.extensions.split(',')]
+        else:
+            allowed_extensions = None
+
+        if args.cd_size is not None:
+            cd_size = args.cd_size
+        elif args.preset_size is not None:
+            cd_size = CD_PRESETS[args.preset_size]
+        else:
+            if not args.quiet:
+                console.print("[red]Error: Missing disc size.[/red]")
+            preset_choice = input("Choose a preset size (or press Enter for custom size): \n" +
+                                 "\n".join(f"  {k}: {v} MB" for k, v in CD_PRESETS.items()) + "\n> ").strip() if not args.quiet else "CD_700MB"
+            if preset_choice in CD_PRESETS:
+                cd_size = CD_PRESETS[preset_choice]
+            else:
+                while True:
+                    custom_size = input("Enter custom disc size in MB (e.g., 730.5): ").strip() if not args.quiet else "700"
+                    try:
+                        cd_size = float(custom_size)
+                        if cd_size <= 0:
+                            if not args.quiet:
+                                console.print("[red]Error: Size must be positive.[/red]")
+                            continue
+                        break
+                    except ValueError:
+                        if not args.quiet:
+                            console.print("[red]Error: Invalid number. Try again.[/red]")
+
+        for path in paths:
+            if not args.quiet:
+                console.print(f"Checking {path}:")
+            check_cd_fit(path, cd_size, allowed_extensions, args.verbose, args.quiet, args.show_errors, args.show_skipped)
+            if not args.quiet:
+                console.print()
+
+    # Pause when running as .exe (e.g., via PyInstaller) and not in quiet mode
+    if getattr(sys, 'frozen', False) and not args.quiet:
+        input("Press Enter to exit...")
 
 if __name__ == "__main__":
     main()
