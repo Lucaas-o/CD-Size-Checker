@@ -1,1 +1,4 @@
 click>=8.1.7
+tqdm>=4.66.5
+pyreadline3>=3.4.1; sys_platform == "win32"
+rich>=13.7.1

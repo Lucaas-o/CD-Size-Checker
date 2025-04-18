@@ -1,52 +1,95 @@
-### CD Size Checker Development Tasks
+# CD Size Checker
 
-- [x] **Implement File Size Calculation**
-  - Created `get_directory_size()` to calculate file sizes (for directories).
-  - **Remaining**: Extend to handle individual files (check `os.path.isfile()`).
+A command-line tool to check if files or directories fit on a CD of a specified size.
 
-- [x] **Implement Directory Size Calculation**
-  - Implemented recursive directory size calculation using `os.walk()` in `get_directory_size()`.
+## Features
 
-- [ ] **Support Multiple CD Sizes**
-  - Added `--cd-size` flag with default 700MB.
-  - **Remaining**: Add predefined options (e.g., 650MB, 700MB, 800MB) using `argparse` choices or validation.
+- Supports both files and directories.
+- Allows predefined CD sizes or custom sizes.
+- Filters files by extensions (e.g., mp3, wav).
+- Provides detailed output including total size, number of files, largest file, and remaining CD space.
+- Supports verbose mode for detailed processing logs.
+- Can check multiple paths in a single run.
 
-- [x] **Create Command-Line Interface (CLI)**
-  - Implemented CLI using `argparse` with `directory` and `--cd-size` arguments.
-  - **Remaining**: Consider switching to `click` for enhanced CLI features (requires updating `requirements.txt`).
+## Installation
 
-- [ ] **Add Error Handling**
-  - Basic handling for invalid directories and inaccessible files.
-  - **Remaining**: Handle symbolic links, permission errors, and validate `--cd-size` (e.g., must be positive).
+1. Clone this repository.
+2. Ensure Python is installed (version 3.6+).
+3. Run the script using Python.
 
-- [ ] **Write Unit Tests**
-  - Test `get_directory_size()` and `check_cd_fit()` for various cases (e.g., empty directories, single files, errors).
-  - Use `unittest` or `pytest` with temporary files/directories.
+## Usage
 
-- [ ] **Add Documentation**
-  - Add detailed docstrings for all functions in `main.py`.
-  - Update README.md with detailed usage examples and screenshots.
+### Checking a single directory
 
-- [ ] **Optimize Performance**
-  - Optimize directory scanning for large file sets (e.g., use `tqdm` for progress bar or `multiprocessing`).
-  - Consider caching file sizes for repeated checks.
+```bash
+python main.py /path/to/directory --preset-size 700MB
+```
 
-- [ ] **Add Support for File Type Filtering**
-  - Allow users to include/exclude specific file types (e.g., `--extensions mp3,wav`).
-  - Use `os.path.splitext()` or `fnmatch` for filtering.
+### Checking a single file
 
-- [ ] **Create Sample Usage Guide**
-  - Provide a step-by-step guide in README.md.
-  - Include examples for common use cases (e.g., checking music files for an audio CD).
+```bash
+python main.py /path/to/file.txt --cd-size 730.5
+```
 
-- [ ] **Enhance Output Details**
-  - Show additional stats (e.g., number of files, largest file, remaining CD space).
-  - Calculate and display in `check_cd_fit()`.
+### Checking multiple paths
 
-- [ ] **Add Verbose Mode**
-  - Add `--verbose` flag to show file-by-file sizes during scanning.
-  - Implement in `get_directory_size()` with conditional printing.
+```bash
+python main.py dir1 dir2 file1.txt --preset-size 800MB
+```
 
-- [ ] **Support Multiple Directories/Files**
-  - Allow checking multiple paths (e.g., `python main.py dir1 dir2 file1.txt`).
-  - Update `argparse` to accept multiple arguments (`nargs='+'`).
+### Filtering by file extensions
+
+```bash
+python main.py /path/to/directory --extensions mp3,wav --verbose
+```
+
+### Verbose mode
+
+Add `--verbose` to see detailed processing of each file.
+
+```bash
+python main.py /path/to/directory --verbose
+```
+
+### Combining options
+
+```bash
+python main.py /path/to/directory --preset-size 700MB --extensions mp3 --verbose
+```
+
+## Command-Line Arguments
+
+- `paths`: One or more paths to files or directories to check.
+- `--cd-size`: Custom CD size in MB (e.g., `730.5`). Overrides `--preset-size`.
+- `--preset-size`: Choose from common CD sizes (default: `700MB`).
+- `--extensions`: Comma-separated list of file extensions to include (e.g., `mp3,wav`).
+- `--verbose`: Show detailed output during processing.
+
+## Example Output
+
+### For a directory:
+
+```
+Checking /path/to/directory:
+Total size: 650.00 MB (100 files)
+Largest file: /path/to/largest/file.mp3 (100.00 MB)
+CD capacity: 700.0 MB
+Files fit on the CD! Remaining space: 50.00 MB
+```
+
+### For a single file:
+
+```
+Checking /path/to/file.txt:
+Total size: 100.00 MB (1 files)
+Largest file: /path/to/file.txt (100.00 MB)
+CD capacity: 700.0 MB
+Files fit on the CD! Remaining space: 600.00 MB
+```
+
+## Notes
+
+- If no files match the specified extensions, the total size will be 0.
+- Symbolic links are not followed for directories (default behavior of `os.walk()`).
+- Permission errors or inaccessible files are skipped with warnings.
+- CD size must be positive; otherwise, an error is displayed.

@@ -1,52 +1,68 @@
-### CD Size Checker Development Tasks
+# TODO.md - CD Size Checker Development Tasks
 
-- [x] **Implement File Size Calculation**
-  - Created `get_directory_size()` to calculate file sizes (for directories).
-  - **Remaining**: Extend to handle individual files (check `os.path.isfile()`).
+## ✅ Completed Tasks
 
-- [x] **Implement Directory Size Calculation**
-  - Implemented recursive directory size calculation using `os.walk()` in `get_directory_size()`.
+### Implement File & Directory Size Calculation
+- `get_directory_size()` renamed to `get_path_size()` to handle both files and directories.
+- Supports individual files using `os.path.isfile()`.
+- Recursive size calculation using `os.walk()`.
 
-- [x] **Support Multiple CD Sizes**
-  - Added `--cd-size` flag with default 700MB.
-  - **Remaining**: Add predefined options (e.g., 650MB, 700MB, 800MB) using `argparse` choices or validation.
+### Support Multiple CD Sizes
+- `--cd-size` flag added with default 700MB.
+- Predefined sizes added: 650MB, 700MB, 800MB, miniCD, businessCard using `argparse` choices via `CD_PRESETS`.
 
-- [x] **Create Command-Line Interface (CLI)**
-  - Implemented CLI using `argparse` with `directory` and `--cd-size` arguments.
-  - **Remaining**: Consider switching to `click` for enhanced CLI features (requires updating `requirements.txt`).
+### Create Command-Line Interface (CLI)
+- CLI implemented using `argparse` with `paths` and `--cd-size` arguments.
+- Note: `click` was considered but not used; listed in `requirements.txt` as unused.
 
-- [ ] **Add Error Handling**
-  - Basic handling for invalid directories and inaccessible files.
-  - **Remaining**: Handle symbolic links, permission errors, and validate `--cd-size` (e.g., must be positive).
+### Add Error Handling
+- Handled invalid directories and inaccessible files.
+- Symbolic links ignored (`followlinks=False` in `os.walk()`).
+- Handled permission errors with `try-except`.
+- Validated `--cd-size` to ensure it's positive.
 
-- [ ] **Write Unit Tests**
-  - Test `get_directory_size()` and `check_cd_fit()` for various cases (e.g., empty directories, single files, errors).
-  - Use `unittest` or `pytest` with temporary files/directories.
+### Add Documentation
+- Docstrings added to all functions (`get_path_size()`, `check_cd_fit()`, `main()`).
+- `README.md` updated with usage examples, argument descriptions, and outputs.
 
-- [ ] **Add Documentation**
-  - Add detailed docstrings for all functions in `main.py`.
-  - Update README.md with detailed usage examples and screenshots.
+### Add Support for File Type Filtering
+- `--extensions` argument added to filter specific file types (e.g., `--extensions mp3,wav`).
+- Uses string methods for extension matching.
 
-- [ ] **Optimize Performance**
-  - Optimize directory scanning for large file sets (e.g., use `tqdm` for progress bar or `multiprocessing`).
-  - Consider caching file sizes for repeated checks.
+### Create Sample Usage Guide
+- Step-by-step usage guide added to `README.md` for checking music files, single files, and multiple paths.
 
-- [ ] **Add Support for File Type Filtering**
-  - Allow users to include/exclude specific file types (e.g., `--extensions mp3,wav`).
-  - Use `os.path.splitext()` or `fnmatch` for filtering.
+### Enhance Output Details
+- Output includes number of files, largest file (with path and size), and remaining CD space in `check_cd_fit()`.
 
-- [ ] **Create Sample Usage Guide**
-  - Provide a step-by-step guide in README.md.
-  - Include examples for common use cases (e.g., checking music files for an audio CD).
+### Add Verbose Mode
+- `--verbose` flag added to show file-by-file processing details.
+- Uses `tqdm.write()` to avoid cluttering the progress bar.
 
-- [ ] **Enhance Output Details**
-  - Show additional stats (e.g., number of files, largest file, remaining CD space).
-  - Calculate and display in `check_cd_fit()`.
+### Support Multiple Directories/Files
+- `argparse` updated to accept multiple paths using `nargs='*'`.
+- Processes each path sequentially with separated outputs.
 
-- [ ] **Add Verbose Mode**
-  - Add `--verbose` flag to show file-by-file sizes during scanning.
-  - Implement in `get_directory_size()` with conditional printing.
+### Improve Interactive Mode
+- Automatically proceeds to the next step after entering one valid path.
+- Feedback message: “Added: {path}”.
 
-- [ ] **Support Multiple Directories/Files**
-  - Allow checking multiple paths (e.g., `python main.py dir1 dir2 file1.txt`).
-  - Update `argparse` to accept multiple arguments (`nargs='+'`).
+## 🔧 Remaining Tasks
+
+### Write Unit Tests
+- Tests planned for `get_path_size()` and `check_cd_fit()`.
+- Should include cases like empty directories, single files, permission errors.
+- Use `unittest` or `pytest` with temporary files.
+- Not yet implemented due to complexity and file handling needs.
+
+### Optimize Performance
+- Consider using `multiprocessing` for large directories.
+- `tqdm` used for user feedback, but not actual speed improvements.
+
+## 💡 Proposed Features
+
+### Add Exclusion Patterns
+- Option: `--exclude` to skip files/directories (e.g., `*.log`, `temp/`).
+
+### Add Output to File
+- Option: `--output file.txt` to save results for later review.
